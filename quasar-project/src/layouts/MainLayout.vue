@@ -12,26 +12,23 @@
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label header>Formulários</q-item-label>
+        <q-item-label header>Páginas</q-item-label>
+
         <q-item
+          v-for="link in navLinks"
+          :key="link.to"
           clickable
           v-ripple
-          to="/products"
+          :to="link.to"
         >
           <q-item-section avatar>
-            <q-icon name="inventory_2" />
+            <q-icon :name="link.icon" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Cadastro de Produtos</q-item-label>
-            <q-item-label caption>Form dinâmico</q-item-label>
+            <q-item-label>{{ link.title }}</q-item-label>
+            <q-item-label caption>{{ link.caption }}</q-item-label>
           </q-item-section>
         </q-item>
-
-        <q-separator spaced />
-
-        <q-item-label header> Essential Links </q-item-label>
-
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
     </q-drawer>
 
@@ -43,52 +40,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import EssentialLink from 'components/EssentialLink.vue';
-import type { EssentialLinkProps } from 'components/essential-link-props';
 
-const linksList: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev',
-  },
+const navLinks = [
+  { title: 'Início', caption: 'Página inicial', icon: 'home', to: '/' },
+  { title: 'Form Builder', caption: 'Layout avançado', icon: 'view_quilt', to: '/form-builder' },
+  { title: 'Workshops', caption: 'Cadastro de workshop', icon: 'event', to: '/workshop' },
+  { title: 'Produtos', caption: 'Cadastro de produtos', icon: 'inventory_2', to: '/products' },
 ];
 
 const leftDrawerOpen = ref(false);
