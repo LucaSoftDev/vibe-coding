@@ -9,7 +9,7 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
-import type { ProductFormValues } from 'src/types/product';
+import type { ProductFormValues } from '../types/product';
 
 export class ProductDto {
   @Expose()
@@ -70,7 +70,7 @@ export class ProductDto {
   @Expose()
   @IsOptional()
   @Transform(({ value }) => (value ? new Date(value).toISOString() : undefined))
-  releaseDate?: string;
+  releaseDate?: string | undefined;
 
   toFormValues(): ProductFormValues {
     return {
