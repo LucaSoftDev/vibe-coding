@@ -6,7 +6,7 @@ import type {
   ApiSelectFetcher,
   ApiSelectFetcherParams,
   ApiSelectFetchResult,
-} from 'src/services/apiSelect';
+} from 'src/types/api-select';
 
 const props = withDefaults(
   defineProps<{
@@ -36,6 +36,15 @@ const hasMore = ref(true);
 
 const resolvedLabel = computed(() => props.label ?? 'Seleção');
 
+function isValidResult(result: unknown): result is ApiSelectFetchResult {
+  return (
+    typeof result === 'object' &&
+    result !== null &&
+    Array.isArray((result as ApiSelectFetchResult).options) &&
+    typeof (result as ApiSelectFetchResult).hasMore === 'boolean'
+  );
+}
+
 async function fetchOptions(
   params: ApiSelectFetcherParams & { reset?: boolean } = { reset: false }
 ) {
@@ -52,6 +61,14 @@ async function fetchOptions(
       pageSize: props.pageSize,
       search: searchSnapshot,
     });
+
+    if (!isValidResult(result)) {
+      console.error(
+        '[ApiSelect] fetcher must return { options: Option[], hasMore: boolean, total?: number }',
+        result
+      );
+      return;
+    }
 
     if (searchSnapshot !== searchTerm.value) {
       return;
