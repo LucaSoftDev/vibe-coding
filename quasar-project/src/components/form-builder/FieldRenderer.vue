@@ -1,17 +1,34 @@
 <!-- components/FieldRenderer.vue -->
 <script setup lang="ts">
+import { computed } from 'vue';
 import type { FieldConfig } from 'src/types/form-types';
 import type { FieldNode } from 'src/types/form-nodes';
+import type { FieldValue } from 'src/types/form-values';
 
 const props = defineProps<{
   node: FieldNode;
   field: FieldConfig;
-  value: any;
+  value: FieldValue;
 }>();
 
 const emits = defineEmits<{
-  (e: 'update-value', value: any): void;
+  (e: 'update-value', value: FieldValue): void;
 }>();
+
+const validationRules = computed(() =>
+  props.field.required ? [(val: FieldValue) => !!val || 'Obrigatório'] : []
+);
+
+function normalizeInputValue(val: FieldValue): string | number | null {
+  if (typeof val === 'string' || typeof val === 'number') {
+    return val;
+  }
+  if (val instanceof Date) {
+    const [datePart] = val.toISOString().split('T');
+    return datePart ?? '';
+  }
+  return val == null ? null : null;
+}
 </script>
 
 <template>
@@ -21,8 +38,8 @@ const emits = defineEmits<{
       :type="field.type === 'number' ? 'number' : 'text'"
       :label="field.label"
       :placeholder="field.placeholder"
-      :model-value="value ?? ''"
-      :rules="field.required ? [val => !!val || 'Obrigatório'] : []"
+      :model-value="normalizeInputValue(value) ?? ''"
+      :rules="validationRules"
       outlined
       dense
       @update:model-value="val => emits('update-value', val)"
@@ -36,8 +53,8 @@ const emits = defineEmits<{
       option-value="value"
       emit-value
       map-options
-      :model-value="value ?? null"
-      :rules="field.required ? [val => !!val || 'Obrigatório'] : []"
+      :model-value="normalizeInputValue(value)"
+      :rules="validationRules"
       outlined
       dense
       @update:model-value="val => emits('update-value', val)"
@@ -53,7 +70,7 @@ const emits = defineEmits<{
     <q-input
       v-else-if="field.type === 'date'"
       :label="field.label"
-      :model-value="value ?? ''"
+      :model-value="normalizeInputValue(value) ?? ''"
       outlined
       dense
       @update:model-value="val => emits('update-value', val)"

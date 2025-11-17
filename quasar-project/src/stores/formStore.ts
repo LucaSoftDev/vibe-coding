@@ -1,8 +1,7 @@
 // stores/formStore.ts
 import { defineStore } from 'pinia';
 import type { FormDefinition } from 'src/types/form-nodes';
-
-type FormValues = Record<string, any>;
+import type { FieldValue, FormValue, FormValues } from 'src/types/form-values';
 
 interface FormState {
   definitions: Record<string, FormDefinition>;
@@ -33,14 +32,14 @@ export const useFormStore = defineStore('forms', {
       this.values[formId] = initial ? { ...initial } : {};
     },
 
-    updateField(formId: string, fieldName: string, value: any) {
+    updateField(formId: string, fieldName: string, value: FieldValue) {
       if (!this.values[formId]) this.values[formId] = {};
       this.values[formId][fieldName] = value;
     },
 
-    updateComplexField(formId: string, fieldName: string, value: any) {
-      // para table/arrays/etc, semântica diferente mas mesma estrutura
-      this.updateField(formId, fieldName, value);
+    updateComplexField(formId: string, fieldName: string, value: FormValue) {
+      if (!this.values[formId]) this.values[formId] = {};
+      this.values[formId][fieldName] = value;
     },
 
     resetForm(formId: string) {
