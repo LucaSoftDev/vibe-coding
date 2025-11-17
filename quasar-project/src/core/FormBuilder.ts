@@ -18,6 +18,7 @@ export class FormBuilder {
   private id: string;
   private title?: string;
   private fields: Record<string, FieldConfig> = {};
+  private fieldOrder: string[] = [];
   private layout: FormNode[] = [];
 
   constructor(id: string) {
@@ -35,6 +36,9 @@ export class FormBuilder {
     cfg: Omit<FieldConfig, 'name' | 'type'>
   ): this {
     this.fields[key] = { ...cfg, name: key, type };
+    if (!this.fieldOrder.includes(key)) {
+      this.fieldOrder.push(key);
+    }
     return this;
   }
 
@@ -93,6 +97,8 @@ export class FormBuilder {
   }
 
   build(): FormDefinition {
+    this.ensureFieldsInLayout();
+
     const definition: FormDefinition = {
       id: this.id,
       fields: this.fields,
@@ -104,6 +110,50 @@ export class FormBuilder {
     }
 
     return definition;
+  }
+
+  private ensureFieldsInLayout() {
+    const usedFields = new Set<string>();
+
+    const collectFields = (nodes: FormNode[]) => {
+      nodes.forEach((node) => {
+        switch (node.type) {
+          case 'field':
+            usedFields.add(node.fieldKey);
+            break;
+          case 'group':
+            collectFields(node.children);
+            break;
+          case 'tabs':
+            node.tabs.forEach((tab) => collectFields(tab.children));
+            break;
+          case 'tab':
+            collectFields(node.children);
+            break;
+          case 'stepper':
+            node.steps.forEach((step) => collectFields(step.children));
+            break;
+          case 'step':
+            collectFields(node.children);
+            break;
+          case 'table':
+            break;
+        }
+      });
+    };
+
+    collectFields(this.layout);
+
+    this.fieldOrder.forEach((fieldKey) => {
+      if (!usedFields.has(fieldKey)) {
+        const node: FieldNode = {
+          id: genId('field'),
+          type: 'field',
+          fieldKey,
+        };
+        this.layout.push(node);
+      }
+    });
   }
 }
 
