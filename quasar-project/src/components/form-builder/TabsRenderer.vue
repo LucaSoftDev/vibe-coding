@@ -2,16 +2,20 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import type { TabsNode } from 'src/types/form-nodes';
+import type { FieldConfig } from 'src/types/form-types';
+import type { FieldValue, FormValue, FormValues } from 'src/types/form-values';
 import NodeRenderer from './NodeRenderer.vue';
 
 const props = defineProps<{
   node: TabsNode;
-  modelValue: Record<string, any>;
+  formId: string;
+  values: FormValues;
+  fields: Record<string, FieldConfig>;
 }>();
 
 const emits = defineEmits<{
-  (e: 'update-field', name: string, value: any): void;
-  (e: 'update-complex-field', name: string, value: any): void;
+  (e: 'update-field', name: string, value: FieldValue): void;
+  (e: 'update-complex-field', name: string, value: FormValue): void;
 }>();
 
 const current = ref(props.node.tabs[0]?.name ?? '');
@@ -46,7 +50,9 @@ const current = ref(props.node.tabs[0]?.name ?? '');
           v-for="child in tab.children"
           :key="child.id"
           :node="child"
-          :model-value="modelValue"
+          :form-id="formId"
+          :values="values"
+          :fields="fields"
           @update-field="(name, value) => emits('update-field', name, value)"
           @update-complex-field="(name, value) => emits('update-complex-field', name, value)"
         />

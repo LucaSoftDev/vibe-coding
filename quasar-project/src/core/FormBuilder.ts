@@ -3,8 +3,6 @@ import {
   type FormDefinition,
   type FormNode,
   type FieldNode,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  type GroupNode,
   type TabsNode,
   type TabNode,
   type StepperNode,
@@ -83,21 +81,29 @@ export class FormBuilder {
       type: 'table',
       fieldName,
       columnKeys,
-      label,
       allowAdd: true,
       allowRemove: true,
     };
+
+    if (label !== undefined) {
+      node.label = label;
+    }
     this.layout.push(node);
     return this;
   }
 
   build(): FormDefinition {
-    return {
+    const definition: FormDefinition = {
       id: this.id,
-      title: this.title,
       fields: this.fields,
       layout: this.layout,
     };
+
+    if (this.title !== undefined) {
+      definition.title = this.title;
+    }
+
+    return definition;
   }
 }
 
@@ -155,10 +161,13 @@ class TabContentBuilder {
       type: 'table',
       fieldName,
       columnKeys,
-      label,
       allowAdd: true,
       allowRemove: true,
     };
+
+    if (label !== undefined) {
+      node.label = label;
+    }
     this.tabNode.children.push(node);
     return this;
   }
@@ -213,10 +222,13 @@ class StepContentBuilder {
       type: 'table',
       fieldName,
       columnKeys,
-      label,
       allowAdd: true,
       allowRemove: true,
     };
+
+    if (label !== undefined) {
+      node.label = label;
+    }
     this.stepNode.children.push(node);
     return this;
   }

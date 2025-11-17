@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useFormStore } from 'src/stores/formStore';
+import type { FieldValue, FormValue, FormValues } from 'src/types/form-values';
 import NodeRenderer from './NodeRenderer.vue';
 
 const props = defineProps<{
@@ -9,20 +10,20 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: 'submit', value: Record<string, any>): void;
+  (e: 'submit', value: FormValues): void;
   (e: 'cancel'): void;
 }>();
 
 const formStore = useFormStore();
 
 const def = computed(() => formStore.getDefinition(props.formId));
-const values = computed(() => formStore.getValues(props.formId));
+const values = computed<FormValues>(() => formStore.getValues(props.formId));
 
-function updateField(name: string, value: any) {
+function updateField(name: string, value: FieldValue) {
   formStore.updateField(props.formId, name, value);
 }
 
-function updateComplexField(name: string, value: any) {
+function updateComplexField(name: string, value: FormValue) {
   formStore.updateComplexField(props.formId, name, value);
 }
 
