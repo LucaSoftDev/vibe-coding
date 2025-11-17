@@ -1,11 +1,6 @@
 import { FormBuilder } from 'src/core/FormBuilder';
 import type { FormDefinitionInput } from 'src/types/form-nodes';
-
-const supplierOptions = [
-  { label: 'Fornecedor A', value: 'supplier_a' },
-  { label: 'Fornecedor B', value: 'supplier_b' },
-  { label: 'Fornecedor C', value: 'supplier_c' },
-];
+import { supplierSelectFetcher } from 'src/services/supplierOptions';
 
 const customerFormDefinition: FormDefinitionInput = {
   id: 'customer',
@@ -80,17 +75,12 @@ const customerFormDefinition: FormDefinitionInput = {
             { type: 'field', fieldKey: 'loyaltyStatus' },
             {
               type: 'component',
-              component: 'SelectComponent',
+              component: 'ApiSelect',
               fieldKey: 'preferredSupplier',
               colSpan: { base: 12, md: 6 },
               props: {
-                label: 'Fornecedor preferido',
-                optionLabel: 'label',
-                optionValue: 'value',
-                options: supplierOptions,
-                emitValue: true,
-                mapOptions: true,
-                clearable: true,
+                label: 'Fornecedor preferido (API)',
+                fetcher: supplierSelectFetcher,
               },
             },
             { type: 'field', fieldKey: 'newsletter' },

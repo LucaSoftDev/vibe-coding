@@ -18,9 +18,11 @@ import TabsRenderer from './TabsRenderer.vue';
 import StepperRenderer from './StepperRenderer.vue';
 import TableRenderer from './TableRenderer.vue';
 import SelectComponent from 'src/components/SelectComponent.vue';
+import ApiSelect from 'src/components/ApiSelect.vue';
 
 const customComponents: Record<string, unknown> = {
   SelectComponent,
+  ApiSelect,
 };
 
 const props = defineProps<{

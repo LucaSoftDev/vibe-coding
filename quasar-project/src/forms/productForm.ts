@@ -1,10 +1,5 @@
 import { FormBuilder } from 'src/core/FormBuilder';
-
-const supplierOptions = [
-  { label: 'Fornecedor A', value: 'supplier_a' },
-  { label: 'Fornecedor B', value: 'supplier_b' },
-  { label: 'Fornecedor C', value: 'supplier_c' },
-];
+import { supplierSelectFetcher } from 'src/services/supplierOptions';
 
 export const productForm = new FormBuilder('productRegistration')
   .setTitle('Cadastro de Produto')
@@ -106,16 +101,11 @@ export const productForm = new FormBuilder('productRegistration')
       .addFieldNode('stock')
       .addFieldNode('isActive')
       .addFieldNode('hasVariants')
-      .addComponent('supplier', 'SelectComponent', {
+      .addComponent('supplier', 'ApiSelect', {
         colSpan: { base: 12, md: 6 },
         props: {
-          label: 'Fornecedor',
-          optionLabel: 'label',
-          optionValue: 'value',
-          options: supplierOptions,
-          emitValue: true,
-          mapOptions: true,
-          clearable: true,
+          label: 'Fornecedor (API)',
+          fetcher: supplierSelectFetcher,
         },
       })
   )
