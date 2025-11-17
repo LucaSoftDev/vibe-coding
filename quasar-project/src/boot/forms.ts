@@ -4,10 +4,14 @@ import { useFormStore } from 'src/stores/formStore';
 
 // importe seus schemas
 import { userAdvancedForm } from 'src/forms/userAdvancedForm';
+import { workshopForm } from 'src/forms/workshopForm';
+import { productForm } from 'src/forms/productForm';
 
 export default boot(({ store }) => {
   const formStore = useFormStore(store);
 
   // Registre quantos forms quiser
   formStore.registerForm(userAdvancedForm);
+  formStore.registerForm(workshopForm);
+  formStore.registerForm(productForm);
 });
