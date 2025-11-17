@@ -4,6 +4,8 @@ import type { QSelectProps } from 'quasar';
 import { computed, ref } from 'vue';
 import type { FieldValue } from 'src/types/form-values';
 
+const REQUIRED_FIELD_MESSAGE = 'Campo obrigatório';
+
 interface InfiniteScrollLabelButton {
   label: string;
   icon: string;
@@ -101,13 +103,8 @@ interface InfiniteScrollSelectProps {
 }
 
 const props = withDefaults(defineProps<InfiniteScrollSelectProps>(), {
-  modelValue: undefined,
-  rules: undefined,
   inputDebounce: 300,
-  bgColor: undefined,
   dense: false,
-  label: undefined,
-  labelButtonOptions: undefined,
   optionLabel: 'label',
   optionValue: 'value',
   emitValue: false,
@@ -116,10 +113,10 @@ const props = withDefaults(defineProps<InfiniteScrollSelectProps>(), {
 });
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: T | undefined);
-  (e: 'onScrollToBottom');
-  (e: 'onFilter', value: string);
-  (e: 'onLabelButtonClicked');
+  (e: 'update:modelValue', value: T | undefined): void;
+  (e: 'onScrollToBottom'): void;
+  (e: 'onFilter', value: string): void;
+  (e: 'onLabelButtonClicked'): void;
 }>();
 
 const select = ref<QSelect>();
@@ -136,7 +133,7 @@ const selectedItem = computed<T | undefined>({
 const computedRules = computed(() => {
   const rules = props.rules ?? [];
   if (props.required) {
-    rules.push(val => !!val || messages.REQUIRED_FIELD);
+    rules.push((val: unknown) => !!val || REQUIRED_FIELD_MESSAGE);
   }
   return rules;
 });

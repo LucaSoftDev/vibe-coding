@@ -2,12 +2,12 @@ import 'reflect-metadata';
 import { defineStore } from 'pinia';
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
-import { api } from 'src/boot/axios';
-import { ProductDto } from 'src/models/ProductDto';
-import type { ProductFormValues } from 'src/types/product';
+import { workflowApi } from 'src/services/workflowApi';
+import { ProductDto } from '../models/ProductDto';
+import type { ProductFormValues } from '../types/product';
 
 interface ProductApiState {
-  currentProduct?: ProductDto;
+  currentProduct: ProductDto | undefined;
   loading: boolean;
 }
 
@@ -30,7 +30,7 @@ export const useProductStore = defineStore('productApi', {
     async loadProductForForm(id: number): Promise<ProductFormValues> {
       this.loading = true;
       try {
-        const { data } = await api.get(`/products/${id}`);
+        const { data } = await workflowApi.get(`/products/${id}`);
         const dto = await transformAndValidate(data);
         this.currentProduct = dto;
         return dto.toFormValues();
@@ -45,7 +45,7 @@ export const useProductStore = defineStore('productApi', {
         const dto = ProductDto.fromFormValues(id, values);
         await validateOrReject(dto, { whitelist: true });
         const payload = dto.toApiPayload();
-        const { data } = await api.put(`/products/${id}`, payload);
+        const { data } = await workflowApi.put(`/products/${id}`, payload);
         const updated = await transformAndValidate(data);
         this.currentProduct = updated;
         return updated;

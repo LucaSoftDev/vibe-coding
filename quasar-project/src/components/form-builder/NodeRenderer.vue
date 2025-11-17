@@ -180,7 +180,7 @@ function getComponentProps(node: ComponentNode) {
       v-if="resolveCustomComponent((node as ComponentNode).component)"
       v-bind="getComponentProps(node as ComponentNode)"
       :model-value="getFieldValue((node as ComponentNode).fieldKey)"
-      @update:model-value="val => emits('update-field', (node as ComponentNode).fieldKey, val as FieldValue)"
+      @update:model-value="(val: FieldValue) => emits('update-field', (node as ComponentNode).fieldKey, val)"
     />
     <div v-else class="text-negative">
       Componente "{{ (node as ComponentNode).component }}" não encontrado.

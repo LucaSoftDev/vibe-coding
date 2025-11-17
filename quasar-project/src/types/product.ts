@@ -1,6 +1,6 @@
-import type { TableRow } from 'src/types/form-values';
+import type { FormValues, TableRow } from './form-values';
 
-export interface ProductFormValues {
+export type ProductFormValues = FormValues & {
   name: string;
   teste: string;
   sku: string;
@@ -14,4 +14,4 @@ export interface ProductFormValues {
   isActive: boolean;
   hasVariants: boolean;
   variants: TableRow[];
-}
+};

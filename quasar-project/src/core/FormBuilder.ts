@@ -118,18 +118,7 @@ export class FormBuilder {
   }
 
   addComponent(fieldKey: string, component: string, options?: ComponentNodeOptions): this {
-    const node: ComponentNode = {
-      id: genId('component'),
-      type: 'component',
-      component,
-      fieldKey,
-      props: options?.props,
-    };
-
-    if (options?.colSpan) {
-      node.colSpan = options.colSpan;
-    }
-
+    const node = createComponentNode(fieldKey, component, options);
     this.layout.push(applyNodeOptions(node, options));
     return this;
   }
@@ -237,7 +226,7 @@ export class FormBuilder {
         case 'step':
           return FormBuilder.normalizeStepNode(node);
         default:
-          return { ...node, id } as FormNode;
+          return { ...(node as BaseNode), id } as FormNode;
       }
     });
   }
@@ -325,18 +314,7 @@ class TabContentBuilder {
   }
 
   addComponent(fieldKey: string, component: string, options?: ComponentNodeOptions): this {
-    const node: ComponentNode = {
-      id: genId('component'),
-      type: 'component',
-      component,
-      fieldKey,
-      props: options?.props,
-    };
-
-    if (options?.colSpan) {
-      node.colSpan = options.colSpan;
-    }
-
+    const node = createComponentNode(fieldKey, component, options);
     this.tabNode.children.push(applyNodeOptions(node, options));
     return this;
   }
@@ -403,18 +381,7 @@ class StepContentBuilder {
   }
 
   addComponent(fieldKey: string, component: string, options?: ComponentNodeOptions): this {
-    const node: ComponentNode = {
-      id: genId('component'),
-      type: 'component',
-      component,
-      fieldKey,
-      props: options?.props,
-    };
-
-    if (options?.colSpan) {
-      node.colSpan = options.colSpan;
-    }
-
+    const node = createComponentNode(fieldKey, component, options);
     this.stepNode.children.push(applyNodeOptions(node, options));
     return this;
   }
@@ -432,5 +399,28 @@ const applyNodeOptions = <T extends BaseNode>(node: T, options?: NodeOptions): T
   if (options?.visibleWhen) {
     node.visibleWhen = options.visibleWhen;
   }
+  return node;
+};
+
+const createComponentNode = (
+  fieldKey: string,
+  component: string,
+  options?: ComponentNodeOptions,
+): ComponentNode => {
+  const node: ComponentNode = {
+    id: genId('component'),
+    type: 'component',
+    component,
+    fieldKey,
+  };
+
+  if (options?.props !== undefined) {
+    node.props = options.props;
+  }
+
+  if (options?.colSpan) {
+    node.colSpan = options.colSpan;
+  }
+
   return node;
 };

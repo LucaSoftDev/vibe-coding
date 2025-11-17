@@ -1,0 +1,18 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "title": "Curso Completo de Form Builder",
+      "sku": "FORM-001",
+      "category": "education",
+      "description": "Workshop fictício usado para demonstrar o fluxo de edição.",
+      "price": 1299,
+      "cost": 700,
+      "stock": 35,
+      "isActive": true,
+      "hasVariants": true,
+      "supplierId": 3,
+      "releaseDate": "2024-02-01T00:00:00.000Z"
+    }
+  ]
+}
