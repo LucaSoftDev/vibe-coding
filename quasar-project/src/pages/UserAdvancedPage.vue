@@ -9,6 +9,8 @@ const formId = 'userAdvanced';
 // se quiser inicializar valores:
 formStore.initFormValues(formId, {
   role: 'user',
+  customPermissions: false,
+  permissions: [],
 });
 </script>
 

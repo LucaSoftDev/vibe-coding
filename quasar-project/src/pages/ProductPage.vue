@@ -7,6 +7,7 @@ const formId = 'productRegistration';
 
 formStore.initFormValues(formId, {
   isActive: true,
+  hasVariants: false,
   variants: [],
 });
 </script>

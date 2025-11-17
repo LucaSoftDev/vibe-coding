@@ -8,11 +8,13 @@ export const productForm = new FormBuilder('productRegistration')
     label: 'Nome do produto',
     required: true,
     placeholder: 'Digite o nome do produto',
+    colSpan: { base: 12, md: 8 },
   })
   .addField('sku', 'text', {
     label: 'SKU',
     required: true,
     placeholder: 'Código interno do produto',
+    colSpan: { base: 12, md: 4 },
   })
   .addField('category', 'select', {
     label: 'Categoria',
@@ -23,13 +25,16 @@ export const productForm = new FormBuilder('productRegistration')
       { label: 'Casa & Jardim', value: 'home' },
       { label: 'Esportes', value: 'sports' },
     ],
+    colSpan: { base: 12, sm: 6 },
   })
   .addField('releaseDate', 'date', {
     label: 'Data de lançamento',
+    colSpan: { base: 12, sm: 6 },
   })
   .addField('description', 'text', {
     label: 'Descrição',
     placeholder: 'Breve resumo do produto',
+    colSpan: 12,
   })
 
   // Precificação e estoque
@@ -37,17 +42,25 @@ export const productForm = new FormBuilder('productRegistration')
     label: 'Preço de venda',
     required: true,
     placeholder: '0,00',
+    colSpan: { base: 12, md: 4 },
   })
   .addField('cost', 'number', {
     label: 'Custo',
     placeholder: '0,00',
+    colSpan: { base: 12, md: 4 },
   })
   .addField('stock', 'number', {
     label: 'Estoque disponível',
     required: true,
+    colSpan: { base: 12, md: 4 },
   })
   .addField('isActive', 'checkbox', {
     label: 'Produto ativo',
+    colSpan: { base: 12, md: 4 },
+  })
+  .addField('hasVariants', 'checkbox', {
+    label: 'Possui variações?',
+    colSpan: { base: 12, md: 4 },
   })
 
   // Colunas da tabela de variações
@@ -78,8 +91,14 @@ export const productForm = new FormBuilder('productRegistration')
       .addFieldNode('cost')
       .addFieldNode('stock')
       .addFieldNode('isActive')
+      .addFieldNode('hasVariants')
   )
   .end()
   .addFieldNode('description')
-  .addTable('variants', ['variantName', 'skuSuffix', 'additionalCost'], 'Variações')
+  .addTable(
+    'variants',
+    ['variantName', 'skuSuffix', 'additionalCost'],
+    'Variações',
+    { visibleWhen: { field: 'hasVariants', equals: true } }
+  )
   .build();

@@ -10,6 +10,9 @@ export const userAdvancedForm = new FormBuilder('userAdvanced')
     required: true,
     placeholder: 'Digite o nome',
   })
+  .addField('customPermissions', 'checkbox', {
+    label: 'Personalizar permissões',
+  })
   .addField('email', 'text', {
     label: 'E-mail',
     required: true,
@@ -59,7 +62,14 @@ export const userAdvancedForm = new FormBuilder('userAdvanced')
     s.addFieldNode('role')
   )
   .addStep('step2', 'Permissões detalhadas', (s) =>
-    s.addTable('permissions', ['module', 'canRead', 'canWrite'], 'Permissões por módulo')
+    s
+      .addFieldNode('customPermissions')
+      .addTable(
+        'permissions',
+        ['module', 'canRead', 'canWrite'],
+        'Permissões por módulo',
+        { visibleWhen: { field: 'customPermissions', equals: true } }
+      )
   )
   .end()
 

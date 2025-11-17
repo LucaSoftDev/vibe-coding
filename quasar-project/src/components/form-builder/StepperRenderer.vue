@@ -43,16 +43,18 @@ function goToStep(index: number, offset: number) {
       :name="step.name"
       :title="step.label"
     >
-      <NodeRenderer
-        v-for="child in step.children"
-        :key="child.id"
-        :node="child"
-        :form-id="formId"
-        :values="values"
-        :fields="fields"
-        @update-field="(name, value) => emits('update-field', name, value)"
-        @update-complex-field="(name, value) => emits('update-complex-field', name, value)"
-      />
+      <div class="form-grid">
+        <NodeRenderer
+          v-for="child in step.children"
+          :key="child.id"
+          :node="child"
+          :form-id="formId"
+          :values="values"
+          :fields="fields"
+          @update-field="(name, value) => emits('update-field', name, value)"
+          @update-complex-field="(name, value) => emits('update-complex-field', name, value)"
+        />
+      </div>
 
       <div class="row justify-between q-mt-md">
         <q-btn

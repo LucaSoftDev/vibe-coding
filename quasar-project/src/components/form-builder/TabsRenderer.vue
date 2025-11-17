@@ -46,16 +46,18 @@ const current = ref(props.node.tabs[0]?.name ?? '');
         :key="tab.name"
         :name="tab.name"
       >
-        <NodeRenderer
-          v-for="child in tab.children"
-          :key="child.id"
-          :node="child"
-          :form-id="formId"
-          :values="values"
-          :fields="fields"
-          @update-field="(name, value) => emits('update-field', name, value)"
-          @update-complex-field="(name, value) => emits('update-complex-field', name, value)"
-        />
+        <div class="form-grid">
+          <NodeRenderer
+            v-for="child in tab.children"
+            :key="child.id"
+            :node="child"
+            :form-id="formId"
+            :values="values"
+            :fields="fields"
+            @update-field="(name, value) => emits('update-field', name, value)"
+            @update-complex-field="(name, value) => emits('update-complex-field', name, value)"
+          />
+        </div>
       </q-tab-panel>
     </q-tab-panels>
   </div>

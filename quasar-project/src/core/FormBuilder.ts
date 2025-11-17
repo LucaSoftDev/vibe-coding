@@ -8,8 +8,10 @@ import {
   type StepperNode,
   type StepNode,
   type TableNode,
+  type BaseNode,
 } from 'src/types/form-nodes';
 import type { FieldConfig, FieldType } from 'src/types/form-types';
+import type { VisibleWhen } from 'src/types/form-nodes';
 
 let idCounter = 0;
 const genId = (prefix: string) => `${prefix}-${++idCounter}`;
@@ -42,13 +44,13 @@ export class FormBuilder {
     return this;
   }
 
-  addFieldNode(fieldKey: string): this {
+  addFieldNode(fieldKey: string, options?: NodeOptions): this {
     const node: FieldNode = {
       id: genId('field'),
       type: 'field',
       fieldKey,
     };
-    this.layout.push(node);
+    this.layout.push(applyNodeOptions(node, options));
     return this;
   }
 
@@ -79,7 +81,7 @@ export class FormBuilder {
   }
 
   // --- Table ---
-  addTable(fieldName: string, columnKeys: string[], label?: string): this {
+  addTable(fieldName: string, columnKeys: string[], label?: string, options?: NodeOptions): this {
     const node: TableNode = {
       id: genId('table'),
       type: 'table',
@@ -92,7 +94,7 @@ export class FormBuilder {
     if (label !== undefined) {
       node.label = label;
     }
-    this.layout.push(node);
+    this.layout.push(applyNodeOptions(node, options));
     return this;
   }
 
@@ -195,17 +197,17 @@ class TabContentBuilder {
     private tabNode: TabNode,
   ) {}
 
-  addFieldNode(fieldKey: string): this {
+  addFieldNode(fieldKey: string, options?: NodeOptions): this {
     const node: FieldNode = {
       id: genId('field'),
       type: 'field',
       fieldKey,
     };
-    this.tabNode.children.push(node);
+    this.tabNode.children.push(applyNodeOptions(node, options));
     return this;
   }
 
-  addTable(fieldName: string, columnKeys: string[], label?: string): this {
+  addTable(fieldName: string, columnKeys: string[], label?: string, options?: NodeOptions): this {
     const node: TableNode = {
       id: genId('table'),
       type: 'table',
@@ -218,7 +220,7 @@ class TabContentBuilder {
     if (label !== undefined) {
       node.label = label;
     }
-    this.tabNode.children.push(node);
+    this.tabNode.children.push(applyNodeOptions(node, options));
     return this;
   }
 }
@@ -256,17 +258,17 @@ class StepContentBuilder {
     private stepNode: StepNode,
   ) {}
 
-  addFieldNode(fieldKey: string): this {
+  addFieldNode(fieldKey: string, options?: NodeOptions): this {
     const node: FieldNode = {
       id: genId('field'),
       type: 'field',
       fieldKey,
     };
-    this.stepNode.children.push(node);
+    this.stepNode.children.push(applyNodeOptions(node, options));
     return this;
   }
 
-  addTable(fieldName: string, columnKeys: string[], label?: string): this {
+  addTable(fieldName: string, columnKeys: string[], label?: string, options?: NodeOptions): this {
     const node: TableNode = {
       id: genId('table'),
       type: 'table',
@@ -279,7 +281,17 @@ class StepContentBuilder {
     if (label !== undefined) {
       node.label = label;
     }
-    this.stepNode.children.push(node);
+    this.stepNode.children.push(applyNodeOptions(node, options));
     return this;
   }
 }
+interface NodeOptions {
+  visibleWhen?: VisibleWhen;
+}
+
+const applyNodeOptions = <T extends BaseNode>(node: T, options?: NodeOptions): T => {
+  if (options?.visibleWhen) {
+    node.visibleWhen = options.visibleWhen;
+  }
+  return node;
+};

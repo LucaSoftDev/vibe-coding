@@ -10,10 +10,16 @@ export type NodeType =
   | 'step'
   | 'table';
 
+export interface VisibleWhen {
+  field: string;
+  equals: boolean;
+}
+
 export interface BaseNode {
   id: string;
   type: NodeType;
   label?: string;
+  visibleWhen?: VisibleWhen;
 }
 
 /**

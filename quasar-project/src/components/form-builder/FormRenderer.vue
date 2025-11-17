@@ -38,16 +38,18 @@ function onSubmit() {
       {{ def.title }}
     </div>
 
-    <NodeRenderer
-      v-for="node in def.layout"
-      :key="node.id"
-      :node="node"
-      :form-id="formId"
-      :values="values"
-      :fields="def.fields"
-      @update-field="updateField"
-      @update-complex-field="updateComplexField"
-    />
+    <div class="form-grid">
+      <NodeRenderer
+        v-for="node in def.layout"
+        :key="node.id"
+        :node="node"
+        :form-id="formId"
+        :values="values"
+        :fields="def.fields"
+        @update-field="updateField"
+        @update-complex-field="updateComplexField"
+      />
+    </div>
 
     <div class="row q-col-gutter-sm q-mt-md justify-end">
       <q-btn flat label="Cancelar" color="secondary" @click="$emit('cancel')" />
