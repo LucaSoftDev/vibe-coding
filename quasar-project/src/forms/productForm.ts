@@ -1,5 +1,11 @@
 import { FormBuilder } from 'src/core/FormBuilder';
 
+const supplierOptions = [
+  { label: 'Fornecedor A', value: 'supplier_a' },
+  { label: 'Fornecedor B', value: 'supplier_b' },
+  { label: 'Fornecedor C', value: 'supplier_c' },
+];
+
 export const productForm = new FormBuilder('productRegistration')
   .setTitle('Cadastro de Produto')
 
@@ -8,7 +14,12 @@ export const productForm = new FormBuilder('productRegistration')
     label: 'Nome do produto',
     required: true,
     placeholder: 'Digite o nome do produto',
-    colSpan: { base: 12, md: 8 },
+    colSpan: { base: 12, md: 8, sm: 4 },
+  })
+  .addField('teste' , 'text', {
+    label: 'Teste',
+    placeholder: 'Campo de teste',
+    colSpan: { base: 12, md: 4 },
   })
   .addField('sku', 'text', {
     label: 'SKU',
@@ -35,6 +46,9 @@ export const productForm = new FormBuilder('productRegistration')
     label: 'Descrição',
     placeholder: 'Breve resumo do produto',
     colSpan: 12,
+  })
+  .addField('supplier', 'text', {
+    label: 'Fornecedor',
   })
 
   // Precificação e estoque
@@ -92,6 +106,18 @@ export const productForm = new FormBuilder('productRegistration')
       .addFieldNode('stock')
       .addFieldNode('isActive')
       .addFieldNode('hasVariants')
+      .addComponent('supplier', 'SelectComponent', {
+        colSpan: { base: 12, md: 6 },
+        props: {
+          label: 'Fornecedor',
+          optionLabel: 'label',
+          optionValue: 'value',
+          options: supplierOptions,
+          emitValue: true,
+          mapOptions: true,
+          clearable: true,
+        },
+      })
   )
   .end()
   .addFieldNode('description')

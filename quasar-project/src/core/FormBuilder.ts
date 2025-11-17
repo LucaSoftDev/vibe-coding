@@ -9,8 +9,9 @@ import {
   type StepNode,
   type TableNode,
   type BaseNode,
+  type ComponentNode,
 } from 'src/types/form-nodes';
-import type { FieldConfig, FieldType } from 'src/types/form-types';
+import type { FieldConfig, FieldType, FieldColSpan } from 'src/types/form-types';
 import type { VisibleWhen } from 'src/types/form-nodes';
 
 let idCounter = 0;
@@ -98,6 +99,23 @@ export class FormBuilder {
     return this;
   }
 
+  addComponent(fieldKey: string, component: string, options?: ComponentNodeOptions): this {
+    const node: ComponentNode = {
+      id: genId('component'),
+      type: 'component',
+      component,
+      fieldKey,
+      props: options?.props,
+    };
+
+    if (options?.colSpan) {
+      node.colSpan = options.colSpan;
+    }
+
+    this.layout.push(applyNodeOptions(node, options));
+    return this;
+  }
+
   build(): FormDefinition {
     this.ensureFieldsInLayout();
 
@@ -121,6 +139,9 @@ export class FormBuilder {
       nodes.forEach((node) => {
         switch (node.type) {
           case 'field':
+            usedFields.add(node.fieldKey);
+            break;
+          case 'component':
             usedFields.add(node.fieldKey);
             break;
           case 'group':
@@ -223,6 +244,23 @@ class TabContentBuilder {
     this.tabNode.children.push(applyNodeOptions(node, options));
     return this;
   }
+
+  addComponent(fieldKey: string, component: string, options?: ComponentNodeOptions): this {
+    const node: ComponentNode = {
+      id: genId('component'),
+      type: 'component',
+      component,
+      fieldKey,
+      props: options?.props,
+    };
+
+    if (options?.colSpan) {
+      node.colSpan = options.colSpan;
+    }
+
+    this.tabNode.children.push(applyNodeOptions(node, options));
+    return this;
+  }
 }
 
 class StepperBuilder {
@@ -284,9 +322,31 @@ class StepContentBuilder {
     this.stepNode.children.push(applyNodeOptions(node, options));
     return this;
   }
+
+  addComponent(fieldKey: string, component: string, options?: ComponentNodeOptions): this {
+    const node: ComponentNode = {
+      id: genId('component'),
+      type: 'component',
+      component,
+      fieldKey,
+      props: options?.props,
+    };
+
+    if (options?.colSpan) {
+      node.colSpan = options.colSpan;
+    }
+
+    this.stepNode.children.push(applyNodeOptions(node, options));
+    return this;
+  }
 }
 interface NodeOptions {
   visibleWhen?: VisibleWhen;
+}
+
+interface ComponentNodeOptions extends NodeOptions {
+  props?: Record<string, unknown>;
+  colSpan?: FieldColSpan;
 }
 
 const applyNodeOptions = <T extends BaseNode>(node: T, options?: NodeOptions): T => {

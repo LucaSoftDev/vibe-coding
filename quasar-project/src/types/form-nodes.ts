@@ -1,5 +1,5 @@
 // types/form-nodes.ts
-import type { FieldConfig } from './form-types';
+import type { FieldConfig, FieldColSpan } from './form-types';
 
 export type NodeType =
   | 'field'
@@ -8,7 +8,8 @@ export type NodeType =
   | 'tab'
   | 'stepper'
   | 'step'
-  | 'table';
+  | 'table'
+  | 'component';
 
 export interface VisibleWhen {
   field: string;
@@ -81,6 +82,14 @@ export interface TableNode extends BaseNode {
   allowRemove?: boolean;
 }
 
+export interface ComponentNode extends BaseNode {
+  type: 'component';
+  component: string;
+  fieldKey: string;
+  props?: Record<string, unknown>;
+  colSpan?: FieldColSpan;
+}
+
 export type FormNode =
   | FieldNode
   | GroupNode
@@ -88,7 +97,8 @@ export type FormNode =
   | TabNode
   | StepperNode
   | StepNode
-  | TableNode;
+  | TableNode
+  | ComponentNode;
 
 /**
  * Definição completa do form

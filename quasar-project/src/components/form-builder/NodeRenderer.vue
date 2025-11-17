@@ -8,6 +8,7 @@ import type {
   StepperNode,
   TableNode,
   VisibleWhen,
+  ComponentNode,
 } from 'src/types/form-nodes';
 import type { FieldConfig, FieldColSpan } from 'src/types/form-types';
 import type { FieldValue, FormValue, FormValues, TableRow } from 'src/types/form-values';
@@ -16,6 +17,11 @@ import FieldRenderer from './FieldRenderer.vue';
 import TabsRenderer from './TabsRenderer.vue';
 import StepperRenderer from './StepperRenderer.vue';
 import TableRenderer from './TableRenderer.vue';
+import SelectComponent from 'src/components/SelectComponent.vue';
+
+const customComponents: Record<string, unknown> = {
+  SelectComponent,
+};
 
 const props = defineProps<{
   node: FormNode;
@@ -126,6 +132,26 @@ function getFieldWrapperClasses(fieldKey: string): string[] {
   });
   return classes;
 }
+
+function getComponentWrapperClasses(node: ComponentNode): string[] {
+  const colSpan = normalizeColSpan(node.colSpan);
+  const classes: string[] = ['form-grid__item', `form-grid__item--span-${colSpan.base ?? 12}`];
+  (['sm', 'md', 'lg', 'xl'] as Breakpoint[]).forEach((bp) => {
+    const span = colSpan[bp];
+    if (span) {
+      classes.push(`form-grid__item--span-${bp}-${span}`);
+    }
+  });
+  return classes;
+}
+
+function resolveCustomComponent(name: string) {
+  return customComponents[name] ?? null;
+}
+
+function getComponentProps(node: ComponentNode) {
+  return node.props ?? {};
+}
 </script>
 
 <template>
@@ -140,6 +166,23 @@ function getFieldWrapperClasses(fieldKey: string): string[] {
       :value="getFieldValue((node as FieldNode).fieldKey)"
       @update-value="(val) => emits('update-field', (node as FieldNode).fieldKey, val)"
     />
+  </div>
+
+  <!-- Componente customizado -->
+  <div
+    v-else-if="node.type === 'component' && isNodeVisible(node)"
+    :class="getComponentWrapperClasses(node as ComponentNode)"
+  >
+    <component
+      :is="resolveCustomComponent((node as ComponentNode).component)"
+      v-if="resolveCustomComponent((node as ComponentNode).component)"
+      v-bind="getComponentProps(node as ComponentNode)"
+      :model-value="getFieldValue((node as ComponentNode).fieldKey)"
+      @update:model-value="val => emits('update-field', (node as ComponentNode).fieldKey, val as FieldValue)"
+    />
+    <div v-else class="text-negative">
+      Componente "{{ (node as ComponentNode).component }}" não encontrado.
+    </div>
   </div>
 
   <!-- Grupo -->

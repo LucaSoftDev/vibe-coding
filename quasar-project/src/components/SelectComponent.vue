@@ -1,7 +1,8 @@
-<script setup lang="ts" generic="T">
-import { messages } from '@/helpers/handlingMessages';
-import { QSelect, QSelectProps } from 'quasar';
+<script setup lang="ts" generic="T extends FieldValue = FieldValue">
+import { QSelect } from 'quasar';
+import type { QSelectProps } from 'quasar';
 import { computed, ref } from 'vue';
+import type { FieldValue } from 'src/types/form-values';
 
 interface InfiniteScrollLabelButton {
   label: string;
@@ -105,7 +106,6 @@ const props = withDefaults(defineProps<InfiniteScrollSelectProps>(), {
   inputDebounce: 300,
   bgColor: undefined,
   dense: false,
-  noOptionsLabel: messages.SELECT_NO_OPTIONS,
   label: undefined,
   labelButtonOptions: undefined,
   optionLabel: 'label',
@@ -146,7 +146,7 @@ const computedLabel = computed(() => {
 });
 
 let lastIndex = 0;
-async function onVirtualScroll(details: {
+function onVirtualScroll(details: {
   index: number;
   from: number;
   to: number;
@@ -229,10 +229,6 @@ function onInputValue(value: string) {
 </template>
 
 <style lang="scss">
-.no-options {
-  color: $default-text;
-}
-
 .limited-height {
   max-height: 300px !important;
 }

@@ -9,6 +9,7 @@ formStore.initFormValues(formId, {
   isActive: true,
   hasVariants: false,
   variants: [],
+  supplier: null,
 });
 </script>
 
