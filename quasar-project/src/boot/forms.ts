@@ -6,6 +6,7 @@ import { useFormStore } from 'src/stores/formStore';
 import { userAdvancedForm } from 'src/forms/userAdvancedForm';
 import { workshopForm } from 'src/forms/workshopForm';
 import { productForm } from 'src/forms/productForm';
+import { customerForm } from 'src/forms/customerForm';
 
 export default boot(({ store }) => {
   const formStore = useFormStore(store);
@@ -14,4 +15,5 @@ export default boot(({ store }) => {
   formStore.registerForm(userAdvancedForm);
   formStore.registerForm(workshopForm);
   formStore.registerForm(productForm);
+  formStore.registerForm(customerForm);
 });

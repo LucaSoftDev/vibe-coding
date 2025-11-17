@@ -46,6 +46,7 @@ const navLinks = [
   { title: 'Form Builder', caption: 'Layout avançado', icon: 'view_quilt', to: '/form-builder' },
   { title: 'Workshops', caption: 'Cadastro de workshop', icon: 'event', to: '/workshop' },
   { title: 'Produtos', caption: 'Cadastro de produtos', icon: 'inventory_2', to: '/products' },
+  { title: 'Clientes', caption: 'Cadastro de clientes', icon: 'event', to: '/customer' },
 ];
 
 const leftDrawerOpen = ref(false);
