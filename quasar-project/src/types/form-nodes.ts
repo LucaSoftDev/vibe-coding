@@ -100,6 +100,57 @@ export type FormNode =
   | TableNode
   | ComponentNode;
 
+export interface BaseNodeInput extends Omit<BaseNode, 'id'> {
+  id?: string;
+}
+
+export interface FieldNodeInput extends Omit<FieldNode, 'id'> {
+  id?: string;
+}
+
+export interface GroupNodeInput extends Omit<GroupNode, 'id' | 'children'> {
+  id?: string;
+  children?: FormNodeInput[];
+}
+
+export interface TabNodeInput extends Omit<TabNode, 'id' | 'children'> {
+  id?: string;
+  children?: FormNodeInput[];
+}
+
+export interface TabsNodeInput extends Omit<TabsNode, 'id' | 'tabs'> {
+  id?: string;
+  tabs?: TabNodeInput[];
+}
+
+export interface StepNodeInput extends Omit<StepNode, 'id' | 'children'> {
+  id?: string;
+  children?: FormNodeInput[];
+}
+
+export interface StepperNodeInput extends Omit<StepperNode, 'id' | 'steps'> {
+  id?: string;
+  steps?: StepNodeInput[];
+}
+
+export interface TableNodeInput extends Omit<TableNode, 'id'> {
+  id?: string;
+}
+
+export interface ComponentNodeInput extends Omit<ComponentNode, 'id'> {
+  id?: string;
+}
+
+export type FormNodeInput =
+  | FieldNodeInput
+  | GroupNodeInput
+  | TabsNodeInput
+  | TabNodeInput
+  | StepperNodeInput
+  | StepNodeInput
+  | TableNodeInput
+  | ComponentNodeInput;
+
 /**
  * Definição completa do form
  */
@@ -112,4 +163,11 @@ export interface FormDefinition {
 
   // Layout: árvore de nodes que só referenciam os campos por chave
   layout: FormNode[];
+}
+
+export interface FormDefinitionInput {
+  id: string;
+  title?: string;
+  fields: Record<string, FieldConfig>;
+  layout: FormNodeInput[];
 }

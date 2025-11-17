@@ -1,8 +1,11 @@
 // core/FormBuilder.ts
 import {
   type FormDefinition,
+  type FormDefinitionInput,
   type FormNode,
+  type FormNodeInput,
   type FieldNode,
+  type GroupNode,
   type TabsNode,
   type TabNode,
   type StepperNode,
@@ -10,6 +13,8 @@ import {
   type TableNode,
   type BaseNode,
   type ComponentNode,
+  type TabNodeInput,
+  type StepNodeInput,
 } from 'src/types/form-nodes';
 import type { FieldConfig, FieldType, FieldColSpan } from 'src/types/form-types';
 import type { VisibleWhen } from 'src/types/form-nodes';
@@ -26,6 +31,19 @@ export class FormBuilder {
 
   constructor(id: string) {
     this.id = id;
+  }
+
+  static fromDefinition(definition: FormDefinitionInput): FormDefinition {
+    const builder = new FormBuilder(definition.id);
+    if (definition.title) {
+      builder.setTitle(definition.title);
+    }
+
+    builder.fields = { ...definition.fields };
+    builder.fieldOrder = Object.keys(definition.fields);
+    builder.layout = FormBuilder.normalizeNodes(definition.layout ?? []);
+
+    return builder.build();
   }
 
   setTitle(title: string): this {
@@ -177,6 +195,67 @@ export class FormBuilder {
         this.layout.push(node);
       }
     });
+  }
+
+  private static normalizeNodes(nodes: FormNodeInput[] = []): FormNode[] {
+    return nodes.map((node) => {
+      const id = node.id ?? genId(node.type);
+
+      switch (node.type) {
+        case 'field':
+          return { ...(node as FieldNode), id };
+        case 'component':
+          return { ...(node as ComponentNode), id };
+        case 'table':
+          return { ...(node as TableNode), id };
+        case 'group': {
+          const groupNode = node as GroupNode & { children?: FormNodeInput[] };
+          return {
+            ...groupNode,
+            id,
+            children: FormBuilder.normalizeNodes(groupNode.children ?? []),
+          };
+        }
+        case 'tabs': {
+          const tabsNode = node as TabsNode & { tabs?: TabNodeInput[] };
+          return {
+            ...tabsNode,
+            id,
+            tabs: (tabsNode.tabs ?? []).map((tab) => FormBuilder.normalizeTabNode(tab)),
+          };
+        }
+        case 'tab':
+          return FormBuilder.normalizeTabNode(node);
+        case 'stepper': {
+          const stepperNode = node as StepperNode & { steps?: StepNodeInput[] };
+          return {
+            ...stepperNode,
+            id,
+            steps: (stepperNode.steps ?? []).map((step) => FormBuilder.normalizeStepNode(step)),
+          };
+        }
+        case 'step':
+          return FormBuilder.normalizeStepNode(node);
+        default:
+          return { ...node, id } as FormNode;
+      }
+    });
+  }
+
+  private static normalizeTabNode(tab: TabNodeInput): TabNode {
+    return {
+      ...tab,
+      id: tab.id ?? genId('tab'),
+      children: FormBuilder.normalizeNodes(tab.children ?? []),
+    };
+  }
+
+  private static normalizeStepNode(step: StepNodeInput): StepNode {
+    return {
+      ...step,
+      id: step.id ?? genId('step'),
+      children: FormBuilder.normalizeNodes(step.children ?? []),
+    };
   }
 }
 
