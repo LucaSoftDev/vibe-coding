@@ -18,16 +18,14 @@ export abstract class BaseEntityService<TEntity extends object> {
     private readonly validatorOptions: ValidatorOptions = defaultValidatorOptions,
   ) {}
 
-  protected async toEntity<TPayload extends unknown | unknown[]>(
-    payload: TPayload,
-  ): Promise<TPayload extends unknown[] ? TEntity[] : TEntity> {
+  protected async toEntity(payload: unknown): Promise<TEntity>;
+  protected async toEntity(payload: unknown[]): Promise<TEntity[]>;
+  protected async toEntity(payload: unknown): Promise<TEntity | TEntity[]> {
     if (Array.isArray(payload)) {
-      const entities = await Promise.all(payload.map((item) => this.convertSingle(item)));
-      return entities as Promise<TPayload extends unknown[] ? TEntity[] : TEntity>;
+      return Promise.all(payload.map((item) => this.convertSingle(item)));
     }
 
-    const entity = await this.convertSingle(payload);
-    return entity as Promise<TPayload extends unknown[] ? TEntity[] : TEntity>;
+    return this.convertSingle(payload);
   }
 
   private async convertSingle(payload: unknown): Promise<TEntity> {
