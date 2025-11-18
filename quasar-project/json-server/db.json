@@ -1,8 +1,8 @@
 {
   "products": [
     {
-      "id": 1,
-      "title": "Curso Completo de Form Builder",
+      "id": "1",
+      "title": "Curso Completo de Form Builder 2",
       "sku": "FORM-001",
       "category": "education",
       "description": "Workshop fictício usado para demonstrar o fluxo de edição.",
@@ -13,6 +13,14 @@
       "hasVariants": true,
       "supplierId": 3,
       "releaseDate": "2024-02-01T00:00:00.000Z"
+    }
+  ],
+  "workshops": [
+    {
+      "id": "ws-1",
+      "title": "Workshop de Form Builder",
+      "date": "2024-08-20T13:00:00.000Z",
+      "instructorName": "Maria Oliveira"
     }
   ]
 }

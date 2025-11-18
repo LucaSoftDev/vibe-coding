@@ -3,19 +3,24 @@ import { onMounted, ref } from 'vue';
 import FormRenderer from 'src/components/form-builder/FormRenderer.vue';
 import { useFormStore } from 'src/stores/formStore';
 import { useProductStore } from 'src/stores/productStore';
+import { productFormAdapter } from 'src/forms/productForm.adapter';
+import type { Product } from 'src/domain/product/product.model';
 import type { ProductFormValues } from 'src/types/product';
 import type { FormValues } from 'src/types/form-values';
 
 const formStore = useFormStore();
-const productApiStore = useProductStore();
+const productStore = useProductStore();
 const formId = 'productRegistration';
 const productId = 1;
 const isLoading = ref(true);
 const loadError = ref<string | null>(null);
+const currentProduct = ref<Product | null>(null);
 
 async function initializeForm() {
   try {
-    const values = await productApiStore.loadProductForForm(productId);
+    const entity = await productStore.fetchById(productId);
+    currentProduct.value = entity;
+    const values = productFormAdapter.toFormValues(entity);
     formStore.initFormValues(formId, values);
   } catch (error) {
     console.error('Failed to load product', error);
@@ -26,8 +31,14 @@ async function initializeForm() {
 }
 
 async function handleSubmit(values: FormValues) {
+  if (!currentProduct.value) {
+    return;
+  }
+
   try {
-    await productApiStore.saveProductFromForm(productId, values as ProductFormValues);
+    const entity = productFormAdapter.toDomain(currentProduct.value, values as ProductFormValues);
+    const saved = await productStore.save(entity);
+    currentProduct.value = saved;
   } catch (error) {
     console.error('Failed to save product', error);
   }

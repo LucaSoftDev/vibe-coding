@@ -61,7 +61,18 @@ npm run build
 - `src/components/form-builder/*` generic renderers (tabs, tables, custom components)
 - `src/stores/*` Pinia stores for forms, products, suppliers
 - `json-server/db.json` seed payload for the edit workflow
+- `src/domain/product/*` domain DTO/model/mapper, isolating API serialization concerns
+- `src/forms/productForm.adapter.ts` converts domain entities to/from form values
+- `src/stores/productStore.ts` Pinia API store that exposes domain entities
+- `src/domain/workshop/*`, `src/services/workshopService.ts` and `src/pages/WorkshopEditPage.vue` show the Service → Domain → Form DTO flow for the Workshop feature
 - `scripts/setup-test-stubs.cjs` helper used by `npm run test`
+
+### Workshop domain workflow example
+
+1. Start JSON Server (`npm run dev:api`) – it now seeds a `workshops` collection with `id: ws-1`.
+2. Visit `/#/workshops/ws-1` while running `npm run dev`.
+3. `WorkshopEditPage.vue` loads the workshop via `workshopService`, which validates the payload using the domain `Workshop` class, converts it to a `WorkshopFormDto`, and seeds the generic `formStore`.
+4. When you submit, the page converts the form values back into a `Workshop` instance and persists using the same service (`toApiDto()`), keeping the form renderer and store free of API details.
 
 ## Configuration
 
