@@ -1,19 +1,30 @@
 # Quasar App (quasar-project)
 
-A Quasar Project
+Modern Quasar/Vue 3 playground showcasing a dynamic form-builder with Pinia stores, class-transformer/class-validator DTOs, and a JSON Server-powered edit workflow.
 
-## Install the dependencies
+## Stack
+
+- [Quasar 2](https://quasar.dev/) + Vue 3 + Vite
+- TypeScript, Pinia, Vue Router
+- Form builder abstractions (`src/core/FormBuilder.ts` + `src/forms/*`)
+- Axios boot file (`src/boot/axios.ts`) plus a dedicated workflow client (`src/services/workflowApi.ts`)
+- `json-server` mock backend for the Products edit flow
+- Node’s built-in test runner (`node:test`) + TypeScript for unit tests
+
+## Getting Started
 
 ```bash
-yarn
-# or
 npm install
+# or
+yarn
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+### Development servers
+
+Run Quasar in SPA mode with hot reload:
 
 ```bash
-quasar dev
+npm run dev
 ```
 
 ### JSON Server edit workflow example
@@ -25,30 +36,33 @@ Use the bundled [json-server](https://github.com/typicode/json-server) instance 
 3. In another terminal, run `npm run dev` and open the Products page (`/#/products`).
 4. When you hit **Salvar**, the form issues a `PUT /products/1` request against the JSON Server and persists the edited data back to `json-server/db.json`.
 
-You can tweak the seed payload directly in `json-server/db.json` to create alternative scenarios (out-of-stock item, inactive product, and so on).
+You can tweak the seed payload directly in `json-server/db.json` to create alternative scenarios (out-of-stock item, inactive product, etc.).
 
-### Lint the files
-
-```bash
-yarn lint
-# or
-npm run lint
-```
-
-### Format the files
+### Code Quality
 
 ```bash
-yarn format
-# or
-npm run format
+npm run lint     # ESLint over src/**
+npm run format   # Prettier over supported extensions
 ```
 
-### Build the app for production
+### Tests
+
+`npm run test` compiles the relevant TS sources with `tsc -p tsconfig.test.json`, generates lightweight stubs in `.test-dist/`, and executes the product store suite with Node’s test runner.
+
+### Build
 
 ```bash
-quasar build
+npm run build
 ```
 
-### Customize the configuration
+## Project Structure Highlights
 
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+- `src/forms/*` FormBuilder definitions (Product, Workshop, Customer, etc.)
+- `src/components/form-builder/*` generic renderers (tabs, tables, custom components)
+- `src/stores/*` Pinia stores for forms, products, suppliers
+- `json-server/db.json` seed payload for the edit workflow
+- `scripts/setup-test-stubs.cjs` helper used by `npm run test`
+
+## Configuration
+
+See [Configuring quasar.config.ts](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js) for advanced customization and refer to `.env.example` for the JSON Server base URL override.

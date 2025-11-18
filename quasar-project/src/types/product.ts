@@ -1,4 +1,4 @@
-import type { FormValues, TableRow } from './form-values';
+import type { FormValues, TableRow } from './form-values.js';
 
 export type ProductFormValues = FormValues & {
   name: string;

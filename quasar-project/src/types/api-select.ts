@@ -1,4 +1,4 @@
-import type { FieldValue } from './form-values';
+import type { FieldValue } from './form-values.js';
 
 export interface ApiSelectOption {
   label: string;

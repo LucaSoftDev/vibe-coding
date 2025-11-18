@@ -2,9 +2,9 @@ import 'reflect-metadata';
 import { defineStore } from 'pinia';
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
-import { workflowApi } from 'src/services/workflowApi';
-import { ProductDto } from '../models/ProductDto';
-import type { ProductFormValues } from '../types/product';
+import { workflowApi } from '../services/workflowApi.js';
+import { ProductDto } from '../models/ProductDto.js';
+import type { ProductFormValues } from '../types/product.js';
 
 interface ProductApiState {
   currentProduct: ProductDto | undefined;

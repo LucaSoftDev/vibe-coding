@@ -15,7 +15,19 @@ const writeStub = (moduleName, content) => {
 };
 
 ensureDir(baseDir);
-fs.writeFileSync(path.join(baseDir, 'package.json'), JSON.stringify({ type: 'commonjs' }), 'utf8');
+const packageJson = {
+  type: 'module',
+  imports: {
+    '#q-app/wrappers': './q-app-wrappers.js',
+  },
+};
+
+fs.writeFileSync(path.join(baseDir, 'package.json'), JSON.stringify(packageJson, null, 2), 'utf8');
+fs.writeFileSync(
+  path.join(baseDir, 'q-app-wrappers.js'),
+  'export const defineBoot = (fn) => fn;\n',
+  'utf8'
+);
 
 writeStub(
   'reflect-metadata',
@@ -60,9 +72,4 @@ exports.validateOrReject = async function () {
   return;
 };
 `.trim(),
-);
-
-writeStub(
-  '#q-app/wrappers',
-  'exports.defineBoot = function (fn) { return fn; };'
 );

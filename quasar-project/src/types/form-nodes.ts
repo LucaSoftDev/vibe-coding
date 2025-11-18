@@ -1,5 +1,5 @@
 // types/form-nodes.ts
-import type { FieldConfig, FieldColSpan } from './form-types';
+import type { FieldConfig, FieldColSpan } from './form-types.js';
 
 export type NodeType =
   | 'field'

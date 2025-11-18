@@ -2,9 +2,9 @@ import assert from 'node:assert/strict';
 import { afterEach, beforeEach, describe, it } from 'node:test';
 import { createPinia, setActivePinia } from 'pinia';
 import type { AxiosResponse } from 'axios';
-import { useProductStore } from '../src/stores/productStore';
-import { api } from '../src/boot/axios';
-import type { ProductFormValues } from '../src/types/product';
+import { useProductStore } from '../src/stores/productStore.js';
+import { workflowApi } from '../src/services/workflowApi.js';
+import type { ProductFormValues } from '../src/types/product.js';
 
 const apiProduct = {
   id: 42,
@@ -22,27 +22,27 @@ const apiProduct = {
 };
 
 describe('productStore', () => {
-  let originalGet: typeof api.get;
-  let originalPut: typeof api.put;
+  let originalGet: typeof workflowApi.get;
+  let originalPut: typeof workflowApi.put;
 
   beforeEach(() => {
     setActivePinia(createPinia());
-    originalGet = api.get;
-    originalPut = api.put;
+    originalGet = workflowApi.get;
+    originalPut = workflowApi.put;
   });
 
   afterEach(() => {
-    api.get = originalGet;
-    api.put = originalPut;
+    workflowApi.get = originalGet;
+    workflowApi.put = originalPut;
   });
 
   it('loadProductForForm fetches data and maps it to form values', async () => {
     const store = useProductStore();
 
-    api.get = (async (url: string) => {
+    workflowApi.get = (async (url: string) => {
       assert.equal(url, `/products/${apiProduct.id}`);
       return { data: apiProduct } as AxiosResponse<typeof apiProduct>;
-    }) as typeof api.get;
+    }) as typeof workflowApi.get;
 
     const values = await store.loadProductForForm(apiProduct.id);
 
@@ -90,11 +90,11 @@ describe('productStore', () => {
 
     let receivedPayload: unknown;
 
-    api.put = (async (url: string, payload: unknown) => {
+    workflowApi.put = (async (url: string, payload: unknown) => {
       assert.equal(url, `/products/${apiResponse.id}`);
       receivedPayload = payload;
       return { data: apiResponse } as AxiosResponse<typeof apiResponse>;
-    }) as typeof api.put;
+    }) as typeof workflowApi.put;
 
     const result = await store.saveProductFromForm(apiResponse.id, formValues);
 

@@ -9,7 +9,7 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
-import type { ProductFormValues } from '../types/product';
+import type { ProductFormValues } from '../types/product.js';
 
 export class ProductDto {
   @Expose()
