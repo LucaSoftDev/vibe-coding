@@ -11,7 +11,7 @@ const transformOptions = {
 
 export const productMapper = {
   dtoToDomain(raw: unknown): Product {
-    const dto = plainToInstance(ProductDto, raw, transformOptions) as ProductDto;
+    const dto = plainToInstance(ProductDto, raw, transformOptions);
     const errors = validateSync(dto, { whitelist: true });
 
     if (errors.length > 0) {
