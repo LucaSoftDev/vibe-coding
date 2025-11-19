@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useFormStore } from 'src/stores/formStore';
 import FormRenderer from 'src/components/form-builder/FormRenderer.vue';
 import { workshopForm } from 'src/forms/workshopForm';
 import type { FormValues } from 'src/types/form-values';
-import type { WorkshopFormDto } from 'src/domain/workshop/workshop.form-dto';
 import { Workshop } from 'src/domain/workshop/workshop.model';
 import { workshopService } from 'src/services/workshopService';
 
 const route = useRoute();
-const router = useRouter();
 const formStore = useFormStore();
 
 const formId = workshopForm.id ?? 'workshop';
@@ -41,13 +39,10 @@ async function loadWorkshop(id: string) {
 }
 
 async function handleSubmit(values: FormValues) {
-  if (!currentWorkshop.value) {
-    return;
-  }
   try {
     const dto = values as WorkshopFormDto;
-    const updatedEntity = Workshop.fromFormDto(dto, currentWorkshop.value);
-    const saved = await workshopService.save(updatedEntity);
+    const model = Workshop.fromFormDto(dto);
+    const saved = await workshopService.save(model);
     currentWorkshop.value = saved;
     formStore.initFormValues(formId, saved.toFormDto());
   } catch (error) {

@@ -5,7 +5,7 @@ const baseURL =
   process.env.VITE_JSON_SERVER_URL ??
   'http://localhost:3333';
 
-export const workflowApi: AxiosInstance = axios.create({
+export const httpClient: AxiosInstance = axios.create({
   baseURL,
   headers: {
     'Content-Type': 'application/json',

@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { defineStore } from 'pinia';
-import { workflowApi } from '../services/workflowApi.js';
+import { httpClient } from '../services/httpClient.js';
 import { productMapper } from '../domain/product/product.mapper.js';
-import { Product } from '../domain/product/product.model.js';
+import type { Product } from '../domain/product/product.model.js';
 
 interface ProductApiState {
   currentProduct: Product | null;
@@ -19,7 +19,7 @@ export const useProductStore = defineStore('productApi', {
     async fetchById(id: number): Promise<Product> {
       this.loading = true;
       try {
-        const { data } = await workflowApi.get(`/products/${id}`);
+        const { data } = await httpClient.get(`/products/${id}`);
         const entity = productMapper.dtoToDomain(data);
         this.currentProduct = entity;
         return entity;
@@ -32,7 +32,7 @@ export const useProductStore = defineStore('productApi', {
       this.loading = true;
       try {
         const payload = productMapper.domainToDto(product);
-        const { data } = await workflowApi.put(`/products/${product.id}`, payload);
+        const { data } = await httpClient.put(`/products/${product.id}`, payload);
         const updated = productMapper.dtoToDomain(data);
         this.currentProduct = updated;
         return updated;

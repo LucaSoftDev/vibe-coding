@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, it } from 'node:test';
 import { createPinia, setActivePinia } from 'pinia';
 import type { AxiosResponse } from 'axios';
 import { useProductStore } from '../src/stores/productStore.js';
-import { workflowApi } from '../src/services/workflowApi.js';
+import { httpClient } from '@/services/httpClient.js';
 import { Product } from '../src/domain/product/product.model.js';
 
 const apiProduct = {
@@ -22,27 +22,27 @@ const apiProduct = {
 };
 
 describe('productStore', () => {
-  let originalGet: typeof workflowApi.get;
-  let originalPut: typeof workflowApi.put;
+  let originalGet: typeof httpClient.get;
+  let originalPut: typeof httpClient.put;
 
   beforeEach(() => {
     setActivePinia(createPinia());
-    originalGet = workflowApi.get;
-    originalPut = workflowApi.put;
+    originalGet = httpClient.get;
+    originalPut = httpClient.put;
   });
 
   afterEach(() => {
-    workflowApi.get = originalGet;
-    workflowApi.put = originalPut;
+    httpClient.get = originalGet;
+    httpClient.put = originalPut;
   });
 
   it('fetchById fetches data and maps it to a domain entity', async () => {
     const store = useProductStore();
 
-    workflowApi.get = (async (url: string) => {
+    httpClient.get = (async (url: string) => {
       assert.equal(url, `/products/${apiProduct.id}`);
       return { data: apiProduct } as AxiosResponse<typeof apiProduct>;
-    }) as typeof workflowApi.get;
+    }) as typeof httpClient.get;
 
     const entity = await store.fetchById(Number(apiProduct.id));
 
@@ -90,11 +90,11 @@ describe('productStore', () => {
 
     let sentPayload: unknown;
 
-    workflowApi.put = (async (url: string, payload: unknown) => {
+    httpClient.put = (async (url: string, payload: unknown) => {
       assert.equal(url, `/products/${entity.id}`);
       sentPayload = payload;
       return { data: apiResponse } as AxiosResponse<typeof apiResponse>;
-    }) as typeof workflowApi.put;
+    }) as typeof httpClient.put;
 
     const saved = await store.save(entity);
 

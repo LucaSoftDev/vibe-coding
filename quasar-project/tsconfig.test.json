@@ -14,7 +14,7 @@
     "src/stores/productStore.ts",
     "src/types/**/*.ts",
     "src/boot/axios.ts",
-    "src/services/workflowApi.ts",
+    "src/services/httpClient.ts",
     "src/env.d.ts",
     "tests/**/*.ts"
   ],
